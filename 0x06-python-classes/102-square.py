@@ -1,57 +1,70 @@
 #!/usr/bin/python3
-"""No module imported"""
+
+"""Define a class Square."""
 
 
 class Square:
-    """Defines a square"""
+    """Represent a square."""
 
     def __init__(self, size=0, position=(0, 0)):
-        """initializes a square
+        """Initialize a new square.
         Args:
-            size: length of each side
-            position: coordinate to locate square
+            size (int): The size of the new square.
+            position (int, int): The position of the new square.
         """
         self.size = size
         self.position = position
 
-    def area(self):
-        """Computes the area of the square
-        Returns: the result
-        """
-        return pow(self.__size, 2)
-
     @property
     def size(self):
-        return self.__size
+        """Get/set the current size of the square."""
+        return (self.__size)
 
     @size.setter
     def size(self, value):
-        if isinstance(value, int):
-            self.__size = value
-        else:
+        if not isinstance(value, int):
             raise TypeError("size must be an integer")
-        if value < 0:
+        elif value < 0:
             raise ValueError("size must be >= 0")
+        self.__size = value
 
-    def __eq__(self, other):
-        """Define the == comparision to a Square."""
-        return self.area() == other.area()
+    @property
+    def position(self):
+        """Get/set the current position of the square."""
+        return (self.__position)
 
-    def __ne__(self, other):
-        """Define the != comparison to a Square."""
-        return self.area() != other.area()
+    @position.setter
+    def position(self, value):
+        if (not isinstance(value, tuple) or
+                len(value) != 2 or
+                not all(isinstance(num, int) for num in value) or
+                not all(num >= 0 for num in value)):
+            raise TypeError("position must be a tuple of 2 positive integers")
+        self.__position = value
 
-    def __lt__(self, other):
-        """Define the < comparison to a Square."""
-        return self.area() < other.area()
+    def area(self):
+        """Return the current area of the square."""
+        return (self.__size * self.__size)
 
-    def __le__(self, other):
-        """Define the <= comparison to a Square."""
-        return self.area() <= other.area()
+    def my_print(self):
+        """Print the square with the # character."""
+        if self.__size == 0:
+            print("")
+            return
 
-    def __gt__(self, other):
-        """Define the > comparison to a Square."""
-        return self.area() > other.area()
+        [print("") for i in range(0, self.__position[1])]
+        for i in range(0, self.__size):
+            [print(" ", end="") for j in range(0, self.__position[0])]
+            [print("#", end="") for k in range(0, self.__size)]
+            print("")
 
-    def __ge__(self, other):
-        """Define the >= compmarison to a Square."""
+    def __str__(self):
+        """Define the print() representation of a Square."""
+        if self.__size != 0:
+            [print("") for i in range(0, self.__position[1])]
+        for i in range(0, self.__size):
+            [print(" ", end="") for j in range(0, self.__position[0])]
+            [print("#", end="") for k in range(0, self.__size)]
+            if i != self.__size - 1:
+                print("")
+        return ("")
