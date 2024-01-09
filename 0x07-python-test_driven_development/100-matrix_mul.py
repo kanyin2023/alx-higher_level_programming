@@ -68,3 +68,5 @@ def matrix_mul(m_a, m_b):
             l += 1
         mul_matrix.append(l_row)
 
+    return mul_matrix
+
