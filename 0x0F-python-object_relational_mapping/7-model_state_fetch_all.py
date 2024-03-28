@@ -1,31 +1,26 @@
 #!/usr/bin/python3
 """
-lists all State objects from the database hbtn_0e_6_usa
+script that lists all State objects from the database hbtn_0e_6_usa
+    - Your script should take 3 arguments: mysql username, mysql password
+    and database name
+    - uses the module SQLAlchemy
+    - imports State and Base from model_state
+    - script connects to a MySQL server running on localhost at port 3306
+    - Results are sorted in ascending order by states.id
 """
-from model_state import Base, State
-import sys
-from sqlalchemy import (create_engine)
-from sqlalchemy.orm import sessionmaker
 
-"""script that lists all State objects from the database hbtn_0e_6_usa"""
-if __name__ == "__main__":
-    # establish a connection to the database
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
-        sys.argv[1], sys.argv[2], sys.argv[3]), pool_pre_ping=True
-    )
+if __name__ == '__main__':
+    import sys
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    from model_state import Base, State
 
-    # creates a all tables associsted with the Base metadata
-    Base.metadata.create_all(engine)
-
-    # create a new session instance bound to the engine
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
+                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
     Session = sessionmaker(bind=engine)
-    session = Session()
+    s = Session()
 
-    # Query all State objects from the database and order by states.id
-    states_objs = session.query(State).all()
-
-    # Print the State objects in the format specified
-    for state in states_objs:
-        print(f'{state.id}: {state.name}')
-
-    session.close()
+    for row in s.query(State).order_by(State.id.asc()):
+        print(row.id, end="")
+        print(': ', end="")
+        print(row.name)

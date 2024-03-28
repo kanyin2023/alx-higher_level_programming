@@ -1,20 +1,29 @@
 #!/usr/bin/python3
-"""import sys and MySQLdb"""
+"""
+Script that lists all `cities` from the database `hbtn_0e_4_usa`.
+Arguments:
+    mysql username (str)
+    mysql password (str)
+    database name (str)
+"""
+
 import sys
 import MySQLdb
 
 if __name__ == "__main__":
-    """make a connection to the database hbtn_0e_0_usa"""
-    db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
+    mySQL_u = sys.argv[1]
+    mySQL_p = sys.argv[2]
+    db_name = sys.argv[3]
 
-    """creat a cursor object"""
+    # By default, it will connect to localhost:3306
+    db = MySQLdb.connect(user=mySQL_u, passwd=mySQL_p, db=db_name)
     cur = db.cursor()
 
-    """execute the SELECT query"""
-    cur.execute("SELECT c.id, c.name, s.name FROM cities as c \
-                INNER JOIN states as s ON c.state_id = s.id")
-    states = cur.fetchall()
+    cur.execute("SELECT c.id, c.name, s.name \
+                 FROM cities c INNER JOIN states s \
+                 ON c.state_id = s.id \
+                 ORDER BY c.id")
+    rows = cur.fetchall()
 
-    """list all states from the  table"""
-    for city in states:
-        print(city)
+    for row in rows:
+        print(row)

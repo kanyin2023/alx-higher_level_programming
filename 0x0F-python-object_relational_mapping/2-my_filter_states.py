@@ -1,25 +1,31 @@
 #!/usr/bin/python3
-"""import sys and MySQLdb"""
+"""
+Script that lists all values in the `states` table of `hbtn_0e_0_usa`
+where `name` matches the argument `state name searched`.
+Arguments:
+    mysql username (str)
+    mysql password (str)
+    database name (str)
+    state name searched (str)
+"""
+
 import sys
 import MySQLdb
 
 if __name__ == "__main__":
-    """make a connection to the database hbtn_0e_0_usa"""
-    db = MySQLdb.connect(user=sys.argv[1], passwd=sys.argv[2], db=sys.argv[3])
+    mySQL_u = sys.argv[1]
+    mySQL_p = sys.argv[2]
+    db_name = sys.argv[3]
 
-    """creat a cursor object"""
+    searched_name = sys.argv[4]
+
+    # By default, it will connect to localhost:3306
+    db = MySQLdb.connect(user=mySQL_u, passwd=mySQL_p, db=db_name)
     cur = db.cursor()
 
-    """execute the SELECT query"""
-    query = "SELECT * FROM states WHERE BINARY name = '{}'".format(
-        sys.argv[4]
-    )
-    cur.execute(query)
-    states = cur.fetchall()
+    cur.execute("SELECT * FROM states WHERE name LIKE BINARY '{}' ORDER BY id"
+                .format(searched_name))
+    rows = cur.fetchall()
 
-    """list all states from the  table"""
-    for state in states:
-        print(state)
-
-    cur.close()
-    db.close()
+    for row in rows:
+        print(row)

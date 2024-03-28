@@ -1,23 +1,17 @@
 #!/usr/bin/python3
-""" Defines a State class
-    Inherits from SQLAlchemy Base and links to the MySQL table states
 """
-from sqlalchemy.ext.declarative import declarative_base
+contains the class definition of a State and an instance Base
+"""
+
+import sqlalchemy
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
-"""create the base class using declarative_base() function"""
 Base = declarative_base()
-
-"""class definition of a State and an instance Base = declarative_base()"""
 
 
 class State(Base):
-    """Represents a state column for a MySQL table
-    __table__: the name of the table to store states
-    id: the states id
-    name: the state's name
-    """
+    """Representation of a state"""
     __tablename__ = 'states'
-
-    id = Column(Integer, primary_key=True, autoincrement=True, nullable=False)
+    id = Column(Integer, primary_key=True)
     name = Column(String(128), nullable=False)

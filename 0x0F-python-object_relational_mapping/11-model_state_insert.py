@@ -1,29 +1,25 @@
 #!/usr/bin/python3
 """
 script that adds the State object “Louisiana” to the database hbtn_0e_6_usa
+    - script takes 3 arguments: mysql username, mysql password and databasename
+    - uses the module SQLAlchemy
+    - imports State and Base from model_state
+    - script should connect to a MySQL server running on localhost at port 3306
+    Print the new states.id after creation
 """
-from model_state import Base, State
-import sys
-from sqlalchemy import (create_engine)
-from sqlalchemy.orm import sessionmaker
 
-if __name__ == "__main__":
-    # establish a connection to the database
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
-        sys.argv[1], sys.argv[2], sys.argv[3]), pool_pre_ping=True
-    )
+if __name__ == '__main__':
+    import sys
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import sessionmaker
+    from model_state import Base, State
 
-    # creates a all tables associsted with the Base metadata
-    Base.metadata.create_all(engine)
-
-    # create a new session instance bound to the engine
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'
+                           .format(sys.argv[1], sys.argv[2], sys.argv[3]))
     Session = sessionmaker(bind=engine)
-    session = Session()
+    s = Session()
 
-    # create an instance to be added
-    new_state = State(name='Louisiana')
-
-    session.add(new_state)
-    session.commit()
-
+    new_state = State(name="Louisiana")
+    s.add(new_state)
+    s.commit()
     print(new_state.id)

@@ -1,33 +1,24 @@
 #!/usr/bin/python3
-"""script 14-model_city_fetch_by_state.py that prints all
-City objects from the database hbtn_0e_14_usa:
-"""
-from model_state import Base, State
-from model_city import City
-import sys
-from sqlalchemy import (create_engine)
-from sqlalchemy.orm import sessionmaker
+""" List all state objects using sqlalchemy """
 
-"""script that lists all City objects from the database hbtn_0e_6_usa"""
-if __name__ == "__main__":
-    # establish a connection to the database
-    engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
-        sys.argv[1], sys.argv[2], sys.argv[3]), pool_pre_ping=True
-    )
+if __name__ == '__main__':
 
-    # creates a all tables associsted with the Base metadata
-    Base.metadata.create_all(engine)
+    from sys import argv
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm.session import sessionmaker, Session
+    from model_state import Base, State
+    from model_city import City
 
-    # create a new session instance bound to the engine
+    username = '{}'.format(argv[1])
+    password = '{}'.format(argv[2])
+    db_name = '{}'.format(argv[3])
+
+    engine = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
+                           .format(username, password, db_name))
+
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # Query all City objects from the database and order by states.id
-    query = session.query(City, State)
-    states = query.filter(City.state_id == State.id).order_by(City.id)
-
-    # Print the State objects in the format specified
-    for city, state in states:
-        print(f'{state.name}: ({city.id}) {city.name}')
-
-    session.close()
+    for state, city in session.query(State, City).\
+            filter(State.id == City.state_id).order_by(City.id):
+        print('{}: ({}) {}'.format(state.name, city.id, city.name))
